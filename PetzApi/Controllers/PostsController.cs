@@ -26,9 +26,9 @@ namespace PetzApi.Controllers
     
         // GET: api/Posts
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_postsRepository.GetAll());
         }
 
         // GET: Posts By User
@@ -46,33 +46,50 @@ namespace PetzApi.Controllers
 
         // GET: api/Posts/5
         [HttpGet("{id}")]
-        //public IActionResult GetPostsByUser(int id)
-        //{
-        //    var posts = _postsRepository.GetPostsByUser(id);
-
-        //    if (posts == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Ok(posts);
-       // }
+        public IActionResult Get(int id)
+        {
+            var post = _postsRepository.GetById(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return Ok(post);
+        }
 
         // POST: api/Posts
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post(Posts post)
         {
+            _postsRepository.Add(post);
+            return Ok(post);
         }
 
         // PUT: api/Posts/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+         public IActionResult Put(int id, Posts post)
         {
+            if (id != post.Id)
+            {
+                return BadRequest();
+            }
+
+            _postsRepository.Update(post);
+            return Ok(post);
         }
 
         // DELETE: api/Posts/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            _postsRepository.DeletePost(id);
+            return NoContent();
+        }
+
+        // GET: api/PostsWithPets
+        [HttpGet("PostWithPets")]
+        public IActionResult GetPostsWithPets()
+        {
+            return Ok(_postsRepository.GetAllWithPets());
         }
     }
 }
