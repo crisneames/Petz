@@ -10,6 +10,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+builder.Services.AddTransient<IPostsRepository, PostsRepository>();
+builder.Services.AddTransient<IPetsRepository, PetsRepository>();
+
 
 
 

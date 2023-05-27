@@ -122,7 +122,7 @@ public class UsersRepository : BaseRepository, IUsersRepository
                               FullName = @FullName,
                               Email = @Email,
                               Username = @Username,
-                              [Password] = @Password
+                              Password = @Password
                         WHERE Id = @Id";
 
                 DbUtils.AddParameter(cmd, "@Id", user.Id);
@@ -150,6 +150,8 @@ public class UsersRepository : BaseRepository, IUsersRepository
             }
         }
     }
+
+    //public Users GetUsersWithPets(int id)
 }
 
 
