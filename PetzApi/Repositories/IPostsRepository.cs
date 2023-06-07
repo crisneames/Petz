@@ -11,5 +11,6 @@ namespace PetzApi.Repositories
         Posts GetById(int id);
         List<Posts> GetPostsByUser(int Id);
         void Update(Posts post);
+        void AddPetPosts(PetPosts petPosts);
     }
 }

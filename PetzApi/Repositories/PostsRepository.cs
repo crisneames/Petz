@@ -56,7 +56,7 @@ public class PostsRepository : BaseRepository, IPostsRepository
                             User = new Users()
                             {
                                 Id = DbUtils.GetInt(reader, "UserId"),
-                                FullName = DbUtils.GetString(reader, "FullName"),
+                                Fullname = DbUtils.GetString(reader, "FullName"),
                                 Email = DbUtils.GetString(reader, "Email"),
                                 Username = DbUtils.GetString(reader, "Username")
                             }
@@ -86,15 +86,17 @@ public class PostsRepository : BaseRepository, IPostsRepository
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = @"
-                                SELECT p.Id
+                                SELECT p.Id as PostId
                                           ,p.Post
                                           ,p.Date
                                           ,p.ImageUrl
-                                          ,p.UserId
-                                          ,u.Username
+                                          ,p.UserId     
+                                          ,u.Id
+                                          ,u.Fullname
                                      FROM posts as p
                                      JOIN users as u
-                                     ON p.UserId = u.Id";
+                                     ON p.UserId = u.Id
+                                     ORDER BY p.Date DESC";
 
                 var reader = cmd.ExecuteReader();
                 var posts = new List<Posts>();
@@ -103,7 +105,7 @@ public class PostsRepository : BaseRepository, IPostsRepository
                 {
                     var post = new Posts()
                     {
-                        Id = DbUtils.GetInt(reader, "Id"),
+                        Id = DbUtils.GetInt(reader, "PostId"),
                         Post = DbUtils.GetString(reader, "Post"),
                         Date = DbUtils.GetDateTime(reader, "Date"),
                         ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
@@ -111,8 +113,8 @@ public class PostsRepository : BaseRepository, IPostsRepository
 
                         User = new Users()
                         {
-
-                            Username = DbUtils.GetString(reader, "Username")
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Fullname = DbUtils.GetString(reader, "Fullname")
                         }
                     };
                     posts.Add(post);
@@ -283,6 +285,27 @@ join pets on pets.Id = petPosts.PetId
 
                 conn.Close();
                 return posts;
+            }
+        }
+    }
+    public void AddPetPosts(PetPosts petPosts)
+    {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"
+                      INSERT INTO [petposts] (PetId, PostId)
+                        OUTPUT INSERTED.ID
+                        VALUES (@PetId, @PostId)";
+
+                DbUtils.AddParameter(cmd, "@PetId", petPosts.PetId);
+                DbUtils.AddParameter(cmd, "@PotId", petPosts.PostId);
+                
+
+
+                petPosts.Id = (int)cmd.ExecuteScalar();
             }
         }
     }

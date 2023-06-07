@@ -30,6 +30,14 @@ export const useSignup = () => {
       // add display name to user
       await res.user.updateProfile({ displayName });
 
+      const user = {
+        firebaseId: res.user.uid,
+        fullName: res.user.displayName,
+        email: res.user.email,
+        username: '',
+        //id: res.user.id,
+      };
+
       //create a user document
       await projectFirestore
         .collection('users')
@@ -41,6 +49,28 @@ export const useSignup = () => {
 
       // dispatch login action
       dispatch({ type: 'LOGIN', payload: res.user });
+
+      await fetch('https://localhost:7013/api/users', {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      })
+        .then((res) => res.json())
+        .then((createdUser) => {
+          if (createdUser.hasOwnProperty('id')) {
+            localStorage.setItem(
+              'capstone_user',
+              JSON.stringify({
+                id: createdUser.id,
+              })
+            );
+
+            //navigate('/');
+          }
+        });
 
       if (!isCancelled) {
         setIsPending(false);

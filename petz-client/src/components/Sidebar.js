@@ -1,7 +1,7 @@
 import './Sidebar.css';
 import React from 'react';
-import dashboard from '../assets/dashboard.png';
-import add_icon from '../assets/add.jpeg';
+// import dashboard from '../assets/dashboard.png';
+// import add_icon from '../assets/add.jpeg';
 import { NavLink } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 
@@ -18,7 +18,7 @@ const Sidebar = () => {
         <nav className="links">
           <ul>
             <li>
-              <NavLink exact to="/">
+              <NavLink to="/">
                 {/* <img src={dashboard} alt="dashboard icon" /> */}
                 <span>Dashboard</span>
               </NavLink>
