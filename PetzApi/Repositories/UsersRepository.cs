@@ -47,7 +47,7 @@ public class UsersRepository : BaseRepository, IUsersRepository
         }
     }
 
-    public Users GetById(int id)
+    public Users GetById(string firebaseId)
     {
         using (var conn = Connection)
         {
@@ -62,8 +62,8 @@ public class UsersRepository : BaseRepository, IUsersRepository
                            ,[Username]
                            ,[Password]
                     FROM[Petz].[dbo].[users]
-                    WHERE Id = @id;";
-                cmd.Parameters.AddWithValue("@id", id);
+                    WHERE FirebaseId = @firebaseId;";
+                cmd.Parameters.AddWithValue("@firebaseId", firebaseId);
                 var reader = cmd.ExecuteReader();
                 Users user = null;
 

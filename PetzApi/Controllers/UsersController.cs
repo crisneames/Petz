@@ -28,10 +28,10 @@ namespace PetzApi.Controllers;
 
 
         // GET: Users/Details/5
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        [HttpGet("{firebaseId}")]
+        public IActionResult Get(string firebaseId)
         {
-            var users = _usersRepository.GetById(id);
+            var users = _usersRepository.GetById(firebaseId);
             if (users == null)
             {
                 return NotFound();

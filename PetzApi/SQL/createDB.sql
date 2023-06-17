@@ -1,4 +1,5 @@
-﻿USE [master]
+﻿
+ USE [master]
 GO
 
 IF db_id('Petz') IS NULL
@@ -7,13 +8,14 @@ GO
 USE [Petz]
 GO
 
-DROP TABLE IF EXISTS [users];
-DROP TABLE IF EXISTS [pets];
-DROP TABLE IF EXISTS [posts];
-DROP TABLE IF EXISTS [comments];
-DROP TABLE IF EXISTS [reactions];
-DROP TABLE IF EXISTS [postReactions];
+
 DROP TABLE IF EXISTS [petPosts];
+DROP TABLE IF EXISTS [postReactions];
+DROP TABLE IF EXISTS [reactions];
+DROP TABLE IF EXISTS [comments];
+DROP TABLE IF EXISTS [posts];
+DROP TABLE IF EXISTS [pets];
+DROP TABLE IF EXISTS [users];
 
 CREATE TABLE [users] (
   [Id] int PRIMARY KEY identity NOT NULL,
@@ -38,7 +40,7 @@ CREATE TABLE [posts] (
   [Id] int PRIMARY KEY identity NOT NULL,
   [Post] nvarchar(255),
   [Date] date,
-  [ImageUrl] time,
+  [ImageUrl] nvarchar(500),
   [UserId] int
 )
 GO
@@ -85,10 +87,10 @@ GO
 ALTER TABLE [postReactions] ADD FOREIGN KEY ([ReactionId]) REFERENCES [reactions] ([Id])
 GO
 
-ALTER TABLE [postReactions] ADD FOREIGN KEY ([PostId]) REFERENCES [posts] ([Id])
+ALTER TABLE [postReactions] ADD FOREIGN KEY ([PostId]) REFERENCES [posts] ([Id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [comments] ADD FOREIGN KEY ([PostId]) REFERENCES [posts] ([Id])
+ALTER TABLE [comments] ADD FOREIGN KEY ([PostId]) REFERENCES [posts] ([Id]) ON DELETE CASCADE
 GO
 
 ALTER TABLE [comments] ADD FOREIGN KEY ([UserId]) REFERENCES [users] ([Id])
@@ -97,5 +99,5 @@ GO
 ALTER TABLE [petPosts] ADD FOREIGN KEY ([PetId]) REFERENCES [pets] ([Id])
 GO
 
-ALTER TABLE [petPosts] ADD FOREIGN KEY ([PostId]) REFERENCES [posts] ([Id])
+ALTER TABLE [petPosts] ADD FOREIGN KEY ([PostId]) REFERENCES [posts] ([Id]) ON DELETE CASCADE
 GO

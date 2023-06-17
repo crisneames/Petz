@@ -12,9 +12,9 @@
   position: relative; */
 
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 40px;
-  max-width: 1200px;
+  grid-template-columns: auto auto auto;
+  grid-gap: 1px;
+  max-width: 600px;
   margin: 40px auto;
 }
 
@@ -34,4 +34,8 @@
   border-radius: 6px;
   box-shadow: 3px 3px 5px rgb(0, 0, 0, 0.05);
   text-decoration: none;
+}
+
+img {
+  max-width: 100%;
 }

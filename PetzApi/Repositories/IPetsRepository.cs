@@ -9,5 +9,6 @@ namespace PetzApi.Repositories
         List<Pets> GetAllPets();
         Pets GetById(int id);
         void Update(Pets pet);
+        List<Pets> GetPetsByUser(int UserId);
     }
 }

@@ -7,7 +7,7 @@ namespace PetzApi.Models
 		public string? Post { get; set; }
 		public DateTime? Date { get; set; }
 		public string? ImageUrl { get; set; }
-		public int UserId { get; set; }
+		public int? UserId { get; set; }
 		public Users? User { get; set; }
 		public List<Pets>? Pet { get; set; }
 

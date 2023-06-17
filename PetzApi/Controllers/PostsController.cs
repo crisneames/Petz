@@ -23,7 +23,7 @@ namespace PetzApi.Controllers
         }
 
 
-    
+
         // GET: api/Posts
         [HttpGet]
         public IActionResult Get()
@@ -66,7 +66,7 @@ namespace PetzApi.Controllers
 
         // PUT: api/Posts/5
         [HttpPut("{id}")]
-         public IActionResult Put(int id, Posts post)
+        public IActionResult Put(int id, Posts post)
         {
             if (id != post.Id)
             {
@@ -85,11 +85,37 @@ namespace PetzApi.Controllers
             return NoContent();
         }
 
-        // GET: api/PostsWithPets
-        [HttpGet("PostWithPets")]
-        public IActionResult GetPostsWithPets()
+        // DELETE: api/Posts/5
+        [HttpDelete("PostWithPets{id}")]
+        public IActionResult DeletePostWithPets(int id)
         {
-            return Ok(_postsRepository.GetAllWithPets());
+            _postsRepository.DeletePostWithPets(id);
+            return NoContent();
+        }
+
+        // GET: api/PostsWithPets/postId
+        [HttpGet("PostWithPets/{postId}")]
+        public IActionResult GetPostWithPets(int postId)
+        {
+            return Ok(_postsRepository.GetPostWithPets(postId));
+        }
+
+        // GET: api/PostsWithPets/
+        [HttpGet("PostsWithPets")]
+        public IActionResult GetAllPostsWithPets()
+        {
+            return Ok(_postsRepository.GetAllPostsWithPets());
+        }
+
+
+        // POST: api/Posts
+        [HttpPost("pets")]
+        public IActionResult PetPosts(PetPosts petPosts)
+        {
+            _postsRepository.AddPetPosts(petPosts);
+            return Ok(petPosts);
         }
     }
+
+   
 }

@@ -15,6 +15,7 @@ export const useLogin = () => {
     try {
       // login
       const res = await projectAuth.signInWithEmailAndPassword(email, password);
+
       // update online status
 
       await projectFirestore
@@ -25,6 +26,25 @@ export const useLogin = () => {
 
       // dispatch login action
       dispatch({ type: 'LOGIN', payload: res.user });
+
+      await fetch(`https://localhost:7013/api/users/${res.user.uid}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res) => res.json())
+        .then((user) => {
+          if (user.hasOwnProperty('id')) {
+            localStorage.setItem(
+              'capstone_user',
+              JSON.stringify({
+                id: user.id,
+              })
+            );
+
+            //navigate('/');
+          }
+        });
 
       if (!isCancelled) {
         setIsPending(false);

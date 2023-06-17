@@ -1,9 +1,7 @@
-//import { userInfo } from 'os';
 import './Create.css';
-//import React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-//import FileUploader from '../../components/FileUploader';
+import axios from 'axios';
 
 import { useAuthContext } from '../../hooks/useAuthContext';
 
@@ -11,7 +9,7 @@ const Create = () => {
   const { user } = useAuthContext;
   //  posts table =Id, Post, Date, ImageUrl, UserId
   //  users table - Id, FirebaseId, FullName, Email, Username, Password
-  const [fullname, setFullname] = useState('');
+  //const [fullname, setFullname] = useState('');
   const [post, setPost] = useState('');
   const [date, setDate] = useState('');
   const [imageUrl, setImageUrl] = useState(null);
@@ -19,86 +17,72 @@ const Create = () => {
 
   // Created Post - we need a pet Id, and two fetches, 1 from posts and the second from pets
 
+  const [file, setFile] = useState();
+
+  function handleChangeFile(event) {
+    setFile(event.target.files[0]);
+  }
+
   const [postSubmit, setPostSubmit] = useState('');
+  const [pet, setPet] = useState('');
+  const [userPets, setUserPets] = useState([]);
 
   const navigate = useNavigate();
 
   const localUser = localStorage.getItem('capstone_user');
   const userObject = JSON.parse(localUser);
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log(username, date, post);
-  // };
-
-  // fileSelectedHandler = (e) => {
-  //   setImageUrl(imageUrl);
-  // };
-
-  const handleFileChange = (e) => {
-    setImageUrl(null);
-    let selected = e.target.files[0];
-    console.log(selected);
-
-    if (!selected) {
-      setImageError('Please select an image');
-      return;
-    }
-
-    if (!selected.type.includes('image')) {
-      setImageError('Selected file must be an image');
-      return;
-    }
-
-    if (selected.size > 150000) {
-      setImageError('Image file size must be less than 150kb');
-      return;
-    }
-
-    setImageError(null);
-    setImageUrl(selected);
-    console.log('image updated');
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(`https://localhost:7013/api/posts`);
       const postArray = await response.json();
       setPostSubmit(postArray);
+
+      const resp = await fetch(
+        `https://localhost:7013/api/pets/user/${userObject.id}`
+      );
+      const userPetsArray = await resp.json();
+      setUserPets(userPetsArray);
     };
     fetchData();
     //console.warn();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(date, post, imageUrl);
     const postSubmit = {
-      //fullname: fullname,
-      date: date,
+      date: new Date(),
       post: post,
       imageUrl: imageUrl,
       userId: userObject.id,
-      // id: userObject.id,
     };
 
-    fetch(`https://localhost:7013/api/posts`, {
+    const response = await fetch(`https://localhost:7013/api/posts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(postSubmit),
-    }).then((addedPost) => {
+    });
+
+    console.log('POST SUB', postSubmit);
+    const addedPost = await response.json();
+
+    console.log('ADDED POST', addedPost);
+
+    if (pet) {
       const petPost = {
         // replace form field below
-        petId: 3,
-        postId: addedPost.Id,
+        petId: pet,
+        postId: addedPost.id,
       };
-      fetch(`https://localhost:7013/api/posts/pets`, {
+
+      await fetch(`https://localhost:7013/api/posts/pets`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(petPost),
       });
-      navigate('/');
-    });
+    }
+    navigate('/');
   };
 
   return (
@@ -116,7 +100,7 @@ const Create = () => {
           />
         </label> */}
         {/* <Image src={user.imageUrl} /> */}
-        <label>
+        {/* <label>
           <span>Date: </span>
           <input
             required
@@ -124,7 +108,7 @@ const Create = () => {
             onChange={(e) => setDate(e.target.value)}
             value={date}
           />
-        </label>
+        </label> */}
         <label>
           <span>Post: </span>
           <textarea
@@ -134,16 +118,35 @@ const Create = () => {
             value={post}
           ></textarea>
         </label>
+
+        <label>
+          <span>Pet Name: </span>
+          <select
+            type="select"
+            onChange={(e) => setPet(e.target.value)}
+            // value={pet}
+          >
+            <option value="">-- Choose --</option>
+            {userPets.map((p) => {
+              return (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              );
+            })}
+          </select>
+        </label>
         <label>
           <span>Image: </span>
-          <input type="file" onChange={handleFileChange} />
-          {/* value{imageUrl} */}
-          {imageError && <div className="error">{imageError}</div>}
+          <input
+            type="text"
+            value={postSubmit.imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+          />
+
+          {/* {imageError && <div className="error">{imageError}</div>} */}
         </label>
-        {/* <FileUploaded
-          onFileSelectSuccess={(file) => setSelectedFile(file)}
-          onFileSelectError={({ error }) => alert(error)}
-        /> */}
+
         <button className="btn">Add Post</button>
       </form>
     </div>

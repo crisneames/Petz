@@ -42,28 +42,28 @@ public class PostsRepository : BaseRepository, IPostsRepository
                 {
                     var postId = DbUtils.GetInt(reader, "Id");
 
-                 
 
-              
-                        var post = new Posts()
+
+
+                    var post = new Posts()
+                    {
+                        Id = postId,
+                        Post = DbUtils.GetString(reader, "Post"),
+                        Date = DbUtils.GetDateTime(reader, "Date"),
+                        ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                        UserId = DbUtils.GetInt(reader, "UserId"),
+
+                        User = new Users()
                         {
-                            Id = postId,
-                            Post = DbUtils.GetString(reader, "Post"),
-                            Date = DbUtils.GetDateTime(reader, "Date"),
-                            ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
-                            UserId = DbUtils.GetInt(reader, "UserId"),
+                            Id = DbUtils.GetInt(reader, "UserId"),
+                            Fullname = DbUtils.GetString(reader, "FullName"),
+                            Email = DbUtils.GetString(reader, "Email"),
+                            Username = DbUtils.GetString(reader, "Username")
+                        }
+                    };
 
-                            User = new Users()
-                            {
-                                Id = DbUtils.GetInt(reader, "UserId"),
-                                Fullname = DbUtils.GetString(reader, "FullName"),
-                                Email = DbUtils.GetString(reader, "Email"),
-                                Username = DbUtils.GetString(reader, "Username")
-                            }
-                        };
+                    posts.Add(post);
 
-                        posts.Add(post);
-                   
 
 
 
@@ -225,7 +225,20 @@ public class PostsRepository : BaseRepository, IPostsRepository
         }
     }
 
-    public List<Posts> GetAllWithPets()
+    public void DeletePostWithPets(int id)
+    {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "DELETE FROM Posts WHERE Id = @Id";
+                DbUtils.AddParameter(cmd, "@Id", id);
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+    public Posts GetPostWithPets(int PostId)
 
 
     {
@@ -243,21 +256,19 @@ public class PostsRepository : BaseRepository, IPostsRepository
 from posts
 join petposts on posts.Id = petPosts.PostId
 join pets on pets.Id = petPosts.PetId
+where posts.id = @Postid";
 
-";
+                cmd.Parameters.AddWithValue("@Postid", PostId);
                 var reader = cmd.ExecuteReader();
-                var posts = new List<Posts>();
+                //var posts = new Posts;
 
-                Posts? post = null;
+                Posts post = new();
 
                 while (reader.Read())
                 {
-                    if (post == null || post.Id != DbUtils.GetInt(reader, "PostId"))
+                    if (post.Id == 0)
                     {
-                        if (post != null)
-                        {
-                            posts.Add(post);
-                        }
+
 
                         post = new Posts()
                         {
@@ -278,13 +289,10 @@ join pets on pets.Id = petPosts.PetId
                     });
                 }
 
-                if (post != null)
-                {
-                    posts.Add(post);
-                }
+
 
                 conn.Close();
-                return posts;
+                return post;
             }
         }
     }
@@ -301,11 +309,84 @@ join pets on pets.Id = petPosts.PetId
                         VALUES (@PetId, @PostId)";
 
                 DbUtils.AddParameter(cmd, "@PetId", petPosts.PetId);
-                DbUtils.AddParameter(cmd, "@PotId", petPosts.PostId);
-                
+                DbUtils.AddParameter(cmd, "@PostId", petPosts.PostId);
+
 
 
                 petPosts.Id = (int)cmd.ExecuteScalar();
+            }
+        }
+    }
+
+    public List<Posts> GetAllPostsWithPets()
+
+
+    {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @" Select posts.Id as PostId
+,posts.Post
+,posts.[Date]
+,posts.ImageUrl 
+,posts.UserId
+,pets.id as PetId
+,pets.name as PetName
+from posts
+left join petposts on posts.Id = petPosts.PostId
+left join pets on pets.Id = petPosts.PetId";
+
+                var reader = cmd.ExecuteReader();
+                var posts = new List<Posts>();
+
+                Posts? post = null;
+
+                while (reader.Read())
+                {
+
+
+                    if (post == null || post.Id != DbUtils.GetInt(reader, "PostId"))
+                    {
+                        if (post != null)
+                        {
+                            posts.Add(post);
+                        }
+
+
+
+
+                        post = new Posts()
+                        {
+                            Id = DbUtils.GetInt(reader, "PostId"),
+                            Post = DbUtils.GetString(reader, "Post"),
+                            Date = DbUtils.GetDateTime(reader, "Date"),
+                            ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                            UserId = DbUtils.GetInt(reader, "UserId"),
+                            Pet = new List<Pets>()
+                        };
+                    }
+
+
+                    if (DbUtils.IsNotDbNull(reader, "PetId"))
+                    {
+                        post.Pet?.Add(new Pets()
+                        {
+                            Id = DbUtils.GetInt(reader, "PetId"),
+                            Name = DbUtils.GetString(reader, "PetName")
+
+                        });
+                    }
+                }
+
+                if (post != null)
+                {
+                    posts.Add(post);
+                }
+
+                conn.Close();
+                return posts;
             }
         }
     }

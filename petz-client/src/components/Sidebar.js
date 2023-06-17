@@ -29,6 +29,12 @@ const Sidebar = () => {
                 <span>New Post</span>
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/addpet">
+                {/* <img src={add_icon} alt="add icon" /> */}
+                <span>Add Pet</span>
+              </NavLink>
+            </li>
           </ul>
         </nav>
       </div>
