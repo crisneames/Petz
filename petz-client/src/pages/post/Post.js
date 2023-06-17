@@ -9,8 +9,6 @@ export const Post = () => {
 
   console.log('user obj', userObject);
 
-  //let counter = 0;
-
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -31,13 +29,9 @@ export const Post = () => {
       const post = await response.json();
       updatePost(post);
     };
-
     fetchData();
-
-    //fetchData2();
   }, [id]);
-  console.log('POST', post);
-  console.log('ID', id);
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
@@ -48,13 +42,6 @@ export const Post = () => {
     };
     fetchData();
   }, [id]);
-
-  // useEffect(() => {
-
-  //   };
-  //   fetchData();
-  // }, []);
-  //console.log('PETNAME', petName);
 
   const handleEditRecipe = (e) => {
     e.preventDefault();
@@ -82,42 +69,11 @@ export const Post = () => {
     const response = await fetch(`https://localhost:7013/api/posts/${id}`, {
       method: 'DELETE',
     });
-    // const delete2 = await fetch(
-    //   `https://localhost:7013/api/Posts/PostWithPets/${id}`,
-    //   {
-    //     method: 'DELETE',
-    //   }
-    // );
   };
-
-  //const url = 'https://localhost:7013/api/posts/' + id;
-  //const url2 = 'https://localhost:7013/api/Posts/PostWithPets/' + id;
-  // // Delete Recipe
-  // const handleDelete = () => {
-  //   fetch(url, {
-  //     method: 'DELETE',
-  //   }).then(() => {
-  //     navigate('/');
-  //   });
-  // };
 
   return (
     <div className="Post">
       <form>
-        {/* <label>
-          <span>Date: </span>
-          <input
-            required
-            value={new Date(post?.date).toLocaleString()}
-            type="date"
-            dateFormat="mm/dd/yyyy"
-            onChange={(e) => {
-              const copy = { ...post };
-              copy.date = e.target.value;
-              updatePost(copy);
-            }}
-          />
-        </label> */}
         <label>
           <span>Post: </span>
           <textarea
@@ -131,35 +87,6 @@ export const Post = () => {
             }}
           ></textarea>
         </label>
-
-        {/* <label htmlFor="pet-name">
-          <span>Pet Name: </span>
-        </label>
-        <select
-          id="pet-name"
-          type="select"
-          value={petName}
-          onChange={(e) => {
-            const copy = { ...petName };
-            copy.pet = e.target.value;
-            setPetName(copy);
-          }}
-        >
-          <option value="default">--Please choose an option--</option>
-
-          {post &&
-            post.pet &&
-            post.pet.map((p) => {
-              //  console.log('TYPE', type);
-
-              return <option value={p.name}>{p.name}</option>;
-
-              // <option key={++counter} value={p.name}>
-              //   {p.name}
-              // </option>
-              // );
-            })}
-        </select> */}
 
         <button
           className="btn"
