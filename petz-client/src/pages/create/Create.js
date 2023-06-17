@@ -7,15 +7,10 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 
 const Create = () => {
   const { user } = useAuthContext;
-  //  posts table =Id, Post, Date, ImageUrl, UserId
-  //  users table - Id, FirebaseId, FullName, Email, Username, Password
-  //const [fullname, setFullname] = useState('');
   const [post, setPost] = useState('');
   const [date, setDate] = useState('');
   const [imageUrl, setImageUrl] = useState(null);
   const [imageError, setImageError] = useState(null);
-
-  // Created Post - we need a pet Id, and two fetches, 1 from posts and the second from pets
 
   const [file, setFile] = useState();
 
@@ -90,25 +85,6 @@ const Create = () => {
       <h2 className="page-title">Create a new post</h2>
 
       <form onSubmit={handleSubmit}>
-        {/* <label>
-          <span>Username: </span>
-          <input
-            required
-            type="text"
-            onChange={(e) => setUsername(e.target.value)}
-            value={username}
-          />
-        </label> */}
-        {/* <Image src={user.imageUrl} /> */}
-        {/* <label>
-          <span>Date: </span>
-          <input
-            required
-            type="date"
-            onChange={(e) => setDate(e.target.value)}
-            value={date}
-          />
-        </label> */}
         <label>
           <span>Post: </span>
           <textarea
@@ -121,11 +97,7 @@ const Create = () => {
 
         <label>
           <span>Pet Name: </span>
-          <select
-            type="select"
-            onChange={(e) => setPet(e.target.value)}
-            // value={pet}
-          >
+          <select type="select" onChange={(e) => setPet(e.target.value)}>
             <option value="">-- Choose --</option>
             {userPets.map((p) => {
               return (
@@ -143,8 +115,6 @@ const Create = () => {
             value={postSubmit.imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
           />
-
-          {/* {imageError && <div className="error">{imageError}</div>} */}
         </label>
 
         <button className="btn">Add Post</button>
