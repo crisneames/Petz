@@ -21,6 +21,7 @@ export const useLogout = () => {
         .update({ online: false });
       // sign the user out
       await projectAuth.signOut();
+      localStorage.removeItem('capstone_user');
 
       // dispatch logout action
       dispatch({ type: 'LOGOUT' });

@@ -66,5 +66,15 @@ public class PetsController : ControllerBase
         _petsRepository.Delete(id);
         return NoContent();
     }
+
+    // GET: pets
+    [HttpGet("user/{UserId}")]
+    public IActionResult GetPetsByUser(int UserId)
+    {
+        return Ok(_petsRepository.GetPetsByUser(UserId));
+    }
+
+
 }
+
 

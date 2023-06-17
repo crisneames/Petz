@@ -1,7 +1,7 @@
 import './Sidebar.css';
 import React from 'react';
-import dashboard from '../assets/dashboard.png';
-import add_icon from '../assets/add.jpeg';
+// import dashboard from '../assets/dashboard.png';
+// import add_icon from '../assets/add.jpeg';
 import { NavLink } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 
@@ -18,7 +18,7 @@ const Sidebar = () => {
         <nav className="links">
           <ul>
             <li>
-              <NavLink exact to="/">
+              <NavLink to="/">
                 {/* <img src={dashboard} alt="dashboard icon" /> */}
                 <span>Dashboard</span>
               </NavLink>
@@ -27,6 +27,12 @@ const Sidebar = () => {
               <NavLink to="/create">
                 {/* <img src={add_icon} alt="add icon" /> */}
                 <span>New Post</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/addpet">
+                {/* <img src={add_icon} alt="add icon" /> */}
+                <span>Add Pet</span>
               </NavLink>
             </li>
           </ul>

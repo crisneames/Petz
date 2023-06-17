@@ -17,7 +17,7 @@ public class UsersRepository : BaseRepository, IUsersRepository
             {
                 cmd.CommandText = @"SELECT [Id]
                                            ,[FirebaseId]
-                                           ,[FullName]
+                                           ,[Fullname]
                                            ,[Email]
                                            ,[Username]
                                            ,[Password]
@@ -32,7 +32,7 @@ public class UsersRepository : BaseRepository, IUsersRepository
                     {
                         Id = DbUtils.GetInt(reader, "Id"),
                         FirebaseId = DbUtils.GetString(reader, "FirebaseId"),
-                        FullName = DbUtils.GetString(reader, "FullName"),
+                        Fullname = DbUtils.GetString(reader, "Fullname"),
                         Email = DbUtils.GetString(reader, "Email"),
                         Username = DbUtils.GetString(reader, "Username"),
                         Password = DbUtils.GetString(reader, "Password"),
@@ -47,7 +47,7 @@ public class UsersRepository : BaseRepository, IUsersRepository
         }
     }
 
-    public Users GetById(int id)
+    public Users GetById(string firebaseId)
     {
         using (var conn = Connection)
         {
@@ -57,13 +57,13 @@ public class UsersRepository : BaseRepository, IUsersRepository
                 cmd.CommandText = @"
                     SELECT [Id]
                            ,[FirebaseId]
-                           ,[FullName]
+                           ,[Fullname]
                            ,[Email]
                            ,[Username]
                            ,[Password]
                     FROM[Petz].[dbo].[users]
-                    WHERE Id = @id;";
-                cmd.Parameters.AddWithValue("@id", id);
+                    WHERE FirebaseId = @firebaseId;";
+                cmd.Parameters.AddWithValue("@firebaseId", firebaseId);
                 var reader = cmd.ExecuteReader();
                 Users user = null;
 
@@ -73,7 +73,7 @@ public class UsersRepository : BaseRepository, IUsersRepository
                     {
                         Id = DbUtils.GetInt(reader, "Id"),
                         FirebaseId = DbUtils.GetString(reader, "FirebaseId"),
-                        FullName = DbUtils.GetString(reader, "FullName"),
+                        Fullname = DbUtils.GetString(reader, "Fullname"),
                         Email = DbUtils.GetString(reader, "Email"),
                         Username = DbUtils.GetString(reader, "Username"),
                         Password = DbUtils.GetString(reader, "Password"),
@@ -94,12 +94,12 @@ public class UsersRepository : BaseRepository, IUsersRepository
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = @"
-                      INSERT INTO [users] (FirebaseId, FullName, Email, Username, Password)
+                      INSERT INTO [users] (FirebaseId, Fullname, Email, Username, Password)
                         OUTPUT INSERTED.ID
-                        VALUES (@FirebaseId, @FullName, @Email, @Username, @Password)";
+                        VALUES (@FirebaseId, @Fullname, @Email, @Username, @Password)";
 
                 DbUtils.AddParameter(cmd, "@FirebaseId", user.FirebaseId);
-                DbUtils.AddParameter(cmd, "@FullName", user.FullName);
+                DbUtils.AddParameter(cmd, "@Fullname", user.Fullname);
                 DbUtils.AddParameter(cmd, "@Email", user.Email);
                 DbUtils.AddParameter(cmd, "@Username", user.Username);
                 DbUtils.AddParameter(cmd, "@Password", user.Password);
@@ -119,7 +119,7 @@ public class UsersRepository : BaseRepository, IUsersRepository
                 cmd.CommandText = @"
                       UPDATE users
                          SET FirebaseId = @FirebaseId,
-                              FullName = @FullName,
+                              Fullname = @Fullname,
                               Email = @Email,
                               Username = @Username,
                               Password = @Password
@@ -127,7 +127,7 @@ public class UsersRepository : BaseRepository, IUsersRepository
 
                 DbUtils.AddParameter(cmd, "@Id", user.Id);
                 DbUtils.AddParameter(cmd, "@FirebaseId", user.FirebaseId);
-                DbUtils.AddParameter(cmd, "@FullName", user.FullName);
+                DbUtils.AddParameter(cmd, "@Fullname", user.Fullname);
                 DbUtils.AddParameter(cmd, "@Email", user.Email);
                 DbUtils.AddParameter(cmd, "@Username", user.Username);
                 DbUtils.AddParameter(cmd, "@Password", user.Password);

@@ -7,7 +7,7 @@ namespace PetzApi.Repositories
         void Add(Users user);
         void Delete(int id);
         List<Users> GetAllUsers();
-        Users GetById(int id);
+        Users GetById(string firebaseId);
         void Update(Users user);
     }
 }

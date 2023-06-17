@@ -149,8 +149,48 @@ public class PetsRepository : BaseRepository, IPetsRepository
         }
     }
 
+    public List<Pets> GetPetsByUser(int UserId)
+    {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT Id
+                                           ,Name
+                                           ,KindOfPet
+                                           ,ImageUrl
+                                           ,UserId
+                                      FROM  pets
+                                      WHERE UserId = @UserId";
+
+                DbUtils.AddParameter(cmd, "@UserId", UserId);
+
+                var reader = cmd.ExecuteReader();
+                var pets = new List<Pets>();
+
+                while (reader.Read())
+                {
+                    var pet = new Pets()
+                    {
+                        Id = DbUtils.GetInt(reader, "Id"),
+                        Name = DbUtils.GetString(reader, "Name"),
+                        KindOfPet = DbUtils.GetString(reader, "KindOfPet"),
+                        ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                        UserId = DbUtils.GetInt(reader, "UserId"),
+
+                    };
+
+                    pets.Add(pet);
+                }
+
+                reader.Close();
+                return pets;
+
+            }
+
+        }
+    }
 }
-
-
 
 

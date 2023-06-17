@@ -41,7 +41,7 @@ const Signup = () => {
       </label>
 
       <label>
-        <span>display name:</span>
+        <span>name:</span>
 
         <input
           required
