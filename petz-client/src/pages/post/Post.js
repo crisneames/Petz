@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import './Post.css';
 
 export const Post = () => {
-  const [postSelect, setPostSelect] = useState('');
+  // const [postSelect, setPostSelect] = useState('');
   const localUser = localStorage.getItem('capstone_user');
   const userObject = JSON.parse(localUser);
 

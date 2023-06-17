@@ -1,7 +1,6 @@
 import './Dashboard.css';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Image from '../../components/Image';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { formatInTimeZone } from 'date-fns-tz';
 
@@ -37,17 +36,30 @@ export const Dashboard = () => {
       <div className="container">
         {posts.map((post) => (
           <div className="post-list">
-            <Link to={`/posts/${post.id}`} key={post.id}>
-              {/* <p> {post.user.fullName}</p> */}
-              <p key={post.id}> {formatDateTime(post.date)}</p>
-              <p>{post.post}</p>
-              <p>
-                {post.pet?.map((pet) => {
-                  return pet.name;
-                })}
-              </p>
-              <img alt="Pet Image" src={post.imageUrl} />
-            </Link>
+            {userObject.id === post.userId ? (
+              <Link to={`/posts/${post.id}`} key={post.id}>
+                {/* <p> {post.user.fullName}</p> */}
+                <p key={post.id}> {formatDateTime(post.date)}</p>
+                <p>{post.post}</p>
+                <p>
+                  {post.pet?.map((pet) => {
+                    return pet.name;
+                  })}
+                </p>
+                <img alt="Pet Image" src={post.imageUrl} />
+              </Link>
+            ) : (
+              <div>
+                <p key={post.id}> {formatDateTime(post.date)}</p>
+                <p>{post.post}</p>
+                <p>
+                  {post.pet?.map((pet) => {
+                    return pet.name;
+                  })}
+                </p>
+                <img alt="Pet Image" src={post.imageUrl} />{' '}
+              </div>
+            )}
           </div>
         ))}
       </div>
