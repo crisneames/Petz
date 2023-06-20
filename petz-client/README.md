@@ -4,6 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+** Petz Brag Board ** project is full CRUD with React frontend / C# backend
+
 In the project directory, you can run:
 
 ### `npm start`
